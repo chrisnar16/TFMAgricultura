@@ -41,7 +41,6 @@ class CherryTreeDataset(Dataset):
                     self.temp_samples[label].append((sorted_paths, self.label_map[label]))
 
         if balance:
-            print('here')
             # Determinar cuántas muestras de "Healthy" seleccionar
             num_disease = len(self.temp_samples['Disease'])
             num_healthy = min(len(self.temp_samples['Healthy']), num_disease * healthy_ratio)
@@ -65,6 +64,7 @@ class CherryTreeDataset(Dataset):
                 if image.mode == 'RGB':
                     image = image.convert('L')
                 elif image.mode == 'I;16':
+                    print('here')
                     image = np.array(image, dtype=np.float32) / 65535
                     image = Image.fromarray(np.uint8(image * 255))
             # Aplica transformaciones definidas en el constructor\
@@ -81,6 +81,8 @@ class CherryTreeDataset(Dataset):
             return image_tensor, label
         else:
             return image_tensors, label
+
+    
     def print_class_counts(self):
         for label, count in self.counts.items():
             print(f"Number of samples for {label}: {count}")
