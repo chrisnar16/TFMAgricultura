@@ -8,7 +8,8 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 
 class CherryTreeDataset(Dataset):
-    def __init__(self, root_dir, transform=None, formats = ('RGB.JPG', 'RED.TIF','GRE.TIF','NIR.TIF','REG.TIF'), concatenate=True, balance=True, healthy_ratio=4):
+    def __init__(self, root_dir, transform=None, formats = ('RGB.JPG', 'RED.TIF','GRE.TIF','NIR.TIF','REG.TIF'), concatenate=True, balance=True, healthy_ratio=4,
+                 focus_central=0.6):
         self.root_dir = root_dir
         self.transform = transform
         self.formats = formats
@@ -55,7 +56,6 @@ class CherryTreeDataset(Dataset):
         return len(self.samples)
 
     def __getitem__(self, idx):
-        #print(idx)
         paths, label = self.samples[idx]
         image_tensors = []
         for path in paths:
@@ -64,7 +64,6 @@ class CherryTreeDataset(Dataset):
                 if image.mode == 'RGB':
                     image = image.convert('L')
                 elif image.mode == 'I;16':
-                    print('here')
                     image = np.array(image, dtype=np.float32) / 65535
                     image = Image.fromarray(np.uint8(image * 255))
             # Aplica transformaciones definidas en el constructor\
