@@ -5,8 +5,8 @@ import os
 import numpy as np
 import torch
 
-PATH = '/mnt/d/Maestria/tfm/7144071'
-#PATH = '/mnt/d/M/TFMAgricultura/7144071'
+#PATH = '/mnt/d/Maestria/tfm/7144071'
+PATH = '/mnt/d/M/TFMAgricultura/7144071'
 
 def plot_spectra(images, label):
     """
