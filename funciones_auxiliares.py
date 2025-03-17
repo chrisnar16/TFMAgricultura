@@ -4,9 +4,10 @@ from PIL import Image, TiffTags
 import os
 import numpy as np
 import torch
+import random
 
-#PATH = '/mnt/d/Maestria/tfm/7144071'
-PATH = '/mnt/d/M/TFMAgricultura/7144071'
+PATH = '/mnt/d/Maestria/tfm/7144071'
+#PATH = '/mnt/d/M/TFMAgricultura/7144071'
 
 def plot_spectra(images, label):
     """
@@ -243,3 +244,32 @@ def crop_central_region(image, center_ratio=0.6):
     else:
         # Para objetos Image de PIL
         return image.crop((start_w, start_h, start_w + new_w, start_h + new_h))
+
+
+def set_seed(seed=42):
+    """
+    Configura todas las semillas posibles para reproducibilidad.
+    
+    Args:
+        seed (int): Valor de la semilla
+    """
+    random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)  # Para multi-GPU
+    
+    # Algunas operaciones en cuDNN son no determinísticas
+    #torch.backends.cudnn.deterministic = True
+    #torch.backends.cudnn.benchmark = False
+    
+    # Asegurar que las operaciones sean determinísticas en todas las plataformas
+    #torch.use_deterministic_algorithms(True, warn_only=True)
+    
+    print(f"Semillas aleatorias configuradas a: {seed}")
+
+def seed_worker(worker_id):
+    worker_seed = torch.initial_seed() % 2**32
+    np.random.seed(worker_seed)
+    random.seed(worker_seed)
